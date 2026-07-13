@@ -1,0 +1,48 @@
+import { NextResponse } from "next/server";
+
+import { getSession } from "@/lib/session";
+import { apiGet, ApiError } from "@/lib/api-client";
+import type { Invitation } from "@/lib/types";
+
+/**
+ * BFF endpoint for the live guests list (used by the event dashboard's
+ * "Tamu" tab to surface new RSVP confirmations as they come in).
+ */
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const session = await getSession();
+  if (!session) {
+    return NextResponse.json(
+      { ok: false, status: 401, message: "Tidak terautentikasi" },
+      { status: 401 },
+    );
+  }
+  const { id } = await params;
+  if (!id) {
+    return NextResponse.json(
+      { ok: false, status: 400, message: "ID acara tidak diberikan" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const { data } = await apiGet<Invitation[]>(
+      `/invitations/event/${id}`,
+      session.accessToken,
+    );
+    return NextResponse.json({ ok: true, data: data ?? [] });
+  } catch (err) {
+    if (err instanceof ApiError) {
+      return NextResponse.json(
+        { ok: false, status: err.statusCode, message: err.message },
+        { status: err.statusCode },
+      );
+    }
+    return NextResponse.json(
+      { ok: false, status: 500, message: "Gagal memuat daftar tamu" },
+      { status: 500 },
+    );
+  }
+}

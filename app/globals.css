@@ -1,26 +1,218 @@
 @import "tailwindcss";
 
+/*
+ * KABARI design system — "wax seal meets QR code".
+ * Warm ink on paper, a single ceremonial oxblood accent used sparingly,
+ * Fraunces for display, Geist for operational UI.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbfaf6;        /* paper */
+  --foreground: #16140f;        /* ink */
+  --surface: #ffffff;           /* lifted card */
+  --surface-muted: #f1eee5;     /* mist panel */
+  --border: #e4e0d6;            /* warm hairline */
+  --ring: #7a1e1e;              /* oxblood focus */
+
+  --primary: #16140f;           /* ink action */
+  --primary-foreground: #fbfaf6;
+
+  --accent: #7a1e1e;            /* seal / active nav */
+  --accent-foreground: #fbfaf6;
+  --accent-soft: #f6eaea;       /* tinted wash */
+
+  --success: #1e6b5a;           /* jade — "hadir" */
+  --success-soft: #e8f1ee;
+  --warning: #b8762a;           /* muted gold foil */
+  --warning-soft: #f7eedc;
+  --danger: #b42318;            /* deep red */
+  --danger-soft: #fbe9e6;
+  --info: #345d8a;              /* slate blue */
+  --info-soft: #e9eef4;
+
+  --shadow-card: 0 1px 2px rgb(22 20 15 / 0.05), 0 6px 18px -8px rgb(22 20 15 / 0.08);
+  --shadow-lift: 0 2px 6px rgb(22 20 15 / 0.06), 0 18px 40px -16px rgb(22 20 15 / 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0e0d0a;      /* night */
+    --foreground: #f2eee3;      /* warm paper text */
+    --surface: #15130f;
+    --surface-muted: #1e1b15;
+    --border: #2a2620;
+    --ring: #a33b3b;
+
+    --primary: #f2eee3;
+    --primary-foreground: #16140f;
+
+    --accent: #a33b3b;
+    --accent-foreground: #fbfaf6;
+    --accent-soft: #2a1717;
+
+    --success: #2e8a75;
+    --success-soft: #142a24;
+    --warning: #d89a3a;
+    --warning-soft: #2c2113;
+    --danger: #e5484d;
+    --danger-soft: #2c1414;
+    --info: #6e94c2;
+    --info-soft: #14202e;
+
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 24px -10px rgb(0 0 0 / 0.5);
+    --shadow-lift: 0 2px 8px rgb(0 0 0 / 0.5), 0 24px 48px -18px rgb(0 0 0 / 0.6);
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--accent) 22%, transparent);
+    color: var(--foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  /* Native select arrow stays readable */
+  select {
+    background-image: none;
+  }
+
+  dialog::backdrop {
+    background-color: color-mix(in srgb, var(--foreground) 32%, transparent);
+    backdrop-filter: blur(2px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* A fine checkerboard texture echoing a QR code — apply with a low-opacity text color. */
+@utility qr-grid {
+  background-image: repeating-conic-gradient(currentColor 0 25%, transparent 0 50%);
+  background-size: 14px 14px;
+}
+
+@utility seal-ring {
+  background-image:
+    radial-gradient(circle at center, transparent 62%, color-mix(in srgb, currentColor 75%, transparent) 62.5%, color-mix(in srgb, currentColor 75%, transparent) 66%, transparent 66.5%);
+}
+
+@utility scan-line {
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, #fbfaf6 60%, transparent) 18%,
+    #fbfaf6 50%,
+    color-mix(in srgb, #fbfaf6 60%, transparent) 82%,
+    transparent
+  );
+  filter: drop-shadow(0 0 6px color-mix(in srgb, #fbfaf6 55%, transparent));
+  animation: scan-sweep 1.6s ease-in-out infinite;
+}
+
+@keyframes scan-sweep {
+  0%, 100% {
+    transform: translateY(-44%);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translateY(44%);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(3px); }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.shake-error {
+  animation: shake 0.3s ease;
+}
+
+.toast-in {
+  animation: toast-in 0.18s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
