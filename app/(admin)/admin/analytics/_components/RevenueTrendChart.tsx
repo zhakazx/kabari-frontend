@@ -120,7 +120,7 @@ export function RevenueTrendChart({
                   className={cn("fill-accent/85 transition-colors")}
                 >
                   <title>
-                    {(p.date ?? "—") + " · " + formatRupiah(p.revenue)}
+                    {p.date ?? "—"} · {formatRupiah(p.revenue)} · {p.orders.toLocaleString("id-ID")} pesanan
                   </title>
                 </rect>
               </g>

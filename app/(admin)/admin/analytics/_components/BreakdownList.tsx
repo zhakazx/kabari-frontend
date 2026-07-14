@@ -58,6 +58,7 @@ export function BreakdownList({
               <div
                 className="h-full rounded-full bg-accent/80"
                 style={{ width: `${barWidth}%` }}
+                title={`${keyLabel?.[key] ?? key}: ${value.toLocaleString("id-ID")} (${percent}%)`}
               />
             </div>
           </li>
