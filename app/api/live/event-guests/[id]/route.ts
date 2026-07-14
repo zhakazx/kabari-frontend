@@ -28,11 +28,11 @@ export async function GET(
   }
 
   try {
-    const { data } = await apiGet<Invitation[]>(
+    const result = await apiGet<{ data: Invitation[] }>(
       `/invitations/event/${id}`,
       session.accessToken,
     );
-    return NextResponse.json({ ok: true, data: data ?? [] });
+    return NextResponse.json({ ok: true, data: result.data?.data ?? [] });
   } catch (err) {
     if (err instanceof ApiError) {
       return NextResponse.json(
